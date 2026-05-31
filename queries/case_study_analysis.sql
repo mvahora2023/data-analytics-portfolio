@@ -1,5 +1,5 @@
 -- ============================================================
--- OmniTech Analytics Case Study
+-- CorpDB Analytics Case Study
 -- Author: Mahmadarsh Vahora
 -- Purpose: Answer 4 business questions for annual planning
 -- Date: 2026-05-30
@@ -184,3 +184,4 @@ SELECT
 FROM DeptProjectStats
 WHERE TotalProjects > 0
 ORDER BY DeliveryRatePct DESC;
+

@@ -1,16 +1,16 @@
 -- ============================================================
--- OmniTech Database
+-- Corporate Operations Database
 -- ============================================================
 USE master;
 GO
 
-IF EXISTS (SELECT name FROM sys.databases WHERE name = 'OmniTech')
-    DROP DATABASE OmniTech;
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'CorpDB')
+    DROP DATABASE CorpDB;
 GO
 
-CREATE DATABASE OmniTech;
+CREATE DATABASE CorpDB;
 GO
-USE OmniTech;
+USE CorpDB;
 GO
 
 -- --------------------------------------------------------
@@ -177,3 +177,4 @@ INSERT INTO SupportTickets (ClientID, AssignedTo, Subject, Priority, Status, Cre
 (8, 4, 'New user onboarding walkthrough',       'Low',    'Open',         '2026-04-30', NULL),
 (5, 8, 'Cannot connect DataSync to source DB',  'High',   'Open',         '2026-05-10', NULL);
 GO
+

@@ -1,7 +1,7 @@
 -- ============================================================
--- OmniTech Analyst Query Library
+-- CorpDB Analyst Query Library
 -- Author: Mahmadarsh Vahora
--- Schema: OmniTech (9-table relational model)
+-- Schema: CorpDB (9-table relational model)
 -- Purpose: Business intelligence queries for operational reporting
 -- ============================================================
 
@@ -262,3 +262,4 @@ SELECT
     RANK() OVER (ORDER BY LifetimeValue DESC)                       AS LTVRank
 FROM ClientSpend
 ORDER BY LifetimeValue DESC;
+
