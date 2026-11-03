@@ -1,3 +1,4 @@
+-- Portfolio sample only: synthetic data; order values are not accounting revenue.
 -- ============================================================
 -- CorpDB Analyst Query Library
 -- Author: Mahmadarsh Vahora
@@ -15,7 +16,7 @@
 WITH CategoryRevenue AS (
     SELECT
         p.Category,
-        SUM(oi.Qty * oi.UnitPrice)          AS CategoryRevenue
+        SUM(oi.Quantity * oi.UnitPrice)          AS CategoryRevenue
     FROM OrderItems   oi
     JOIN Products     p  ON oi.ProductID = p.ProductID
     JOIN Orders       o  ON oi.OrderID   = o.OrderID
@@ -61,48 +62,30 @@ ORDER BY
 
 
 -- ============================================================
--- Query 3: Project On-Time Delivery Rate by Department
--- Business Question: Which departments consistently deliver
---   projects on or before the planned end date?
+-- Query 3: Project completion and on-time delivery by department
+-- EndDate is planned; CompletedDate is observed. Avoids treating a
+-- deadline in the past as proof of completed/on-time work.
 -- ============================================================
-SELECT
-    d.DeptName,
-    COUNT(proj.ProjID)                                              AS TotalCompleted,
-    SUM(
-        CASE
-            WHEN proj.EndDate >= proj.StartDate
-             AND proj.Status = 'Completed'
-             AND proj.EndDate <= GETDATE()
-            THEN 1 ELSE 0
-        END
-    )                                                               AS OnTimeDeliveries,
-    CAST(
-        100.0 * SUM(
-            CASE
-                WHEN proj.Status = 'Completed'
-                 AND proj.EndDate <= GETDATE()
-                THEN 1 ELSE 0
-            END
-        ) / NULLIF(COUNT(proj.ProjID), 0)
-    AS DECIMAL(5,2))                                                AS CompletionRatePct,
-    CAST(
-        100.0 * SUM(
-            CASE
-                WHEN proj.Status = 'Completed'
-                 AND proj.EndDate <= GETDATE()   -- delivered on or before planned end
-                THEN 1 ELSE 0
-            END
-        ) / NULLIF(
-            SUM(CASE WHEN proj.Status = 'Completed' THEN 1 ELSE 0 END),
-        0)
-    AS DECIMAL(5,2))                                                AS OnTimeRatePct
-FROM Departments d
-JOIN Employees   e    ON e.DeptID  = d.DeptID
-JOIN Projects    proj ON proj.EmpID = e.EmpID
-GROUP BY d.DeptID, d.DeptName
-HAVING COUNT(proj.ProjID) > 0
+SELECT d.Name AS DepartmentName,
+       COUNT(proj.ProjectID) AS TotalProjects,
+       SUM(CASE WHEN proj.Status='Completed' THEN 1 ELSE 0 END) AS CompletedProjects,
+       SUM(CASE WHEN proj.Status='Completed'
+                     AND proj.CompletedDate IS NOT NULL
+                     AND proj.CompletedDate <= proj.EndDate THEN 1 ELSE 0 END) AS OnTimeDeliveries,
+       CAST(100.0 * SUM(CASE WHEN proj.Status='Completed' THEN 1 ELSE 0 END)
+                 / NULLIF(COUNT(proj.ProjectID),0) AS DECIMAL(5,2)) AS CompletionRatePct,
+       CAST(100.0 * SUM(CASE WHEN proj.Status='Completed'
+                                 AND proj.CompletedDate IS NOT NULL
+                                 AND proj.CompletedDate <= proj.EndDate THEN 1 ELSE 0 END)
+                 / NULLIF(SUM(CASE WHEN proj.Status='Completed'
+                                         AND proj.CompletedDate IS NOT NULL THEN 1 ELSE 0 END),0)
+            AS DECIMAL(5,2)) AS OnTimeRatePct
+FROM Departments AS d
+JOIN Employees AS e ON e.DepartmentID=d.DepartmentID
+JOIN Projects AS proj ON proj.OwnerID=e.EmployeeID
+GROUP BY d.DepartmentID,d.Name
+HAVING COUNT(proj.ProjectID)>0
 ORDER BY OnTimeRatePct DESC;
-
 
 -- ============================================================
 -- Query 4: Top 5 Products by Revenue Using RANK()
@@ -114,9 +97,9 @@ WITH ProductRevenue AS (
         p.ProductID,
         p.Name                                                      AS ProductName,
         p.Category,
-        SUM(oi.Qty * oi.UnitPrice)                                  AS TotalRevenue,
-        SUM(oi.Qty)                                                 AS UnitsSold,
-        RANK() OVER (ORDER BY SUM(oi.Qty * oi.UnitPrice) DESC)      AS RevenueRank
+        SUM(oi.Quantity * oi.UnitPrice)                                  AS TotalRevenue,
+        SUM(oi.Quantity)                                                 AS UnitsSold,
+        RANK() OVER (ORDER BY SUM(oi.Quantity * oi.UnitPrice) DESC)      AS RevenueRank
     FROM Products    p
     JOIN OrderItems  oi ON oi.ProductID = p.ProductID
     JOIN Orders      o  ON o.OrderID    = oi.OrderID
@@ -175,8 +158,8 @@ ORDER BY
 --   average sit?
 -- ============================================================
 SELECT
-    d.DeptName,
-    COUNT(e.EmpID)                                                  AS HeadCount,
+    d.Name,
+    COUNT(e.EmployeeID)                                                  AS HeadCount,
     CAST(AVG(e.Salary) AS DECIMAL(10,2))                            AS AvgSalary,
     CAST(MIN(e.Salary) AS DECIMAL(10,2))                            AS MinSalary,
     CAST(MAX(e.Salary) AS DECIMAL(10,2))                            AS MaxSalary,
@@ -187,8 +170,8 @@ SELECT
         100.0 * SUM(e.Salary) / NULLIF(d.Budget, 0)
     AS DECIMAL(5,2))                                                AS SalaryBudgetPct
 FROM Departments d
-JOIN Employees   e ON e.DeptID = d.DeptID
-GROUP BY d.DeptID, d.DeptName, d.Budget
+JOIN Employees   e ON e.DepartmentID = d.DepartmentID
+GROUP BY d.DepartmentID, d.Name, d.Budget
 ORDER BY AvgSalary DESC;
 
 
@@ -202,8 +185,8 @@ WITH MonthlyVolume AS (
         YEAR(OrderDate)                                             AS OrderYear,
         MONTH(OrderDate)                                            AS OrderMonth,
         DATENAME(MONTH, OrderDate)                                  AS MonthName,
-        COUNT(*)                                                    AS OrderCount,
-        CAST(SUM(oi.Qty * oi.UnitPrice) AS DECIMAL(12,2))          AS MonthRevenue
+        COUNT(DISTINCT o.OrderID)                                                    AS OrderCount,
+        CAST(SUM(oi.Quantity * oi.UnitPrice) AS DECIMAL(12,2))          AS MonthRevenue
     FROM Orders     o
     JOIN OrderItems oi ON oi.OrderID = o.OrderID
     WHERE o.Status NOT IN ('Cancelled')
@@ -235,10 +218,10 @@ ORDER BY OrderYear, OrderMonth;
 WITH ClientSpend AS (
     SELECT
         c.ClientID,
-        c.Name                                                      AS ClientName,
+        c.CompanyName                                                      AS ClientName,
         c.Tier,
         COUNT(DISTINCT o.OrderID)                                   AS TotalOrders,
-        CAST(SUM(oi.Qty * oi.UnitPrice) AS DECIMAL(12,2))          AS LifetimeValue,
+        CAST(SUM(oi.Quantity * oi.UnitPrice) AS DECIMAL(12,2))          AS LifetimeValue,
         MIN(o.OrderDate)                                            AS FirstOrderDate,
         MAX(o.OrderDate)                                            AS LastOrderDate,
         DATEDIFF(DAY, MIN(o.OrderDate), MAX(o.OrderDate))          AS CustomerAgeDays
@@ -246,7 +229,7 @@ WITH ClientSpend AS (
     JOIN Orders     o  ON o.ClientID   = c.ClientID
     JOIN OrderItems oi ON oi.OrderID   = o.OrderID
     WHERE o.Status NOT IN ('Cancelled')
-    GROUP BY c.ClientID, c.Name, c.Tier
+    GROUP BY c.ClientID, c.CompanyName, c.Tier
 )
 SELECT
     ClientName,
