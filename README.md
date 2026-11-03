@@ -6,7 +6,7 @@
 ![Power BI](https://img.shields.io/badge/Power%20BI-DAX-F2C811?logo=powerbi&logoColor=black)
 ![Google Data Analytics](https://img.shields.io/badge/Google-Data%20Analytics%20Cert-4285F4?logo=google&logoColor=white)
 
-SQL schema design, T-SQL query library, Power BI DAX measures, and business intelligence case studies built on Microsoft SQL Server. Demonstrates end-to-end analytics capability: from schema design through dashboard delivery.
+SQL schema design, T-SQL query library, Power BI DAX measures, and business intelligence case studies built on Microsoft SQL Server. Demonstrates database design, analysis-query writing, and documented reporting measures. The repository includes DAX measure definitions but not a packaged Power BI `.pbix` dashboard.
 
 ---
 
