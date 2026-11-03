@@ -4,13 +4,16 @@
 USE master;
 GO
 
-IF EXISTS (SELECT name FROM sys.databases WHERE name = 'CorpDB')
-    DROP DATABASE CorpDB;
-GO
-
-CREATE DATABASE CorpDB;
+IF DB_ID(N'CorpDB') IS NULL
+    EXEC(N'CREATE DATABASE CorpDB');
 GO
 USE CorpDB;
+GO
+-- Non-destructive setup: stop rather than replace any existing demo tables.
+IF EXISTS (SELECT 1 FROM sys.tables
+           WHERE name IN ('Departments','Employees','Clients','Products',
+                          'Projects','Orders','OrderItems','SupportTickets'))
+    THROW 50001, 'Existing CorpDB tables detected. Use a fresh demo database.', 1;
 GO
 
 -- --------------------------------------------------------
@@ -61,7 +64,8 @@ CREATE TABLE Projects (
     OwnerID        INT REFERENCES Employees(EmployeeID),
     Status         NVARCHAR(30) CHECK (Status IN ('Scoping','Active','On Hold','Completed','Cancelled')) DEFAULT 'Scoping',
     StartDate      DATE,
-    EndDate        DATE,
+    EndDate        DATE,  -- planned deadline
+    CompletedDate  DATE,  -- observed completion, if completed
     Budget         DECIMAL(12,2),
     ActualCost     DECIMAL(12,2)
 );
@@ -78,8 +82,8 @@ CREATE TABLE OrderItems (
     ItemID         INT PRIMARY KEY IDENTITY,
     OrderID        INT REFERENCES Orders(OrderID),
     ProductID      INT REFERENCES Products(ProductID),
-    Quantity       INT NOT NULL,
-    UnitPrice      DECIMAL(10,2) NOT NULL
+    Quantity       INT NOT NULL CHECK (Quantity > 0),
+    UnitPrice      DECIMAL(10,2) NOT NULL CHECK (UnitPrice >= 0)
 );
 
 CREATE TABLE SupportTickets (
@@ -136,14 +140,14 @@ INSERT INTO Products (Name, Category, Description, UnitPrice, StockQty) VALUES
 ('Training Bundle',         'Service',      '10-session staff training package',            1200.00,  999),
 ('API Access Tier 2',       'Add-on',       'Extended API rate limits and webhooks',         399.00,  999);
 
-INSERT INTO Projects (Name, ClientID, OwnerID, Status, StartDate, EndDate, Budget, ActualCost) VALUES
-('Apex Platform Migration',     1, 1, 'Active',      '2026-01-10', '2026-06-30', 120000.00, 54000.00),
-('Vertix Analytics Rollout',    2, 3, 'Active',      '2026-02-01', '2026-05-31',  60000.00, 28000.00),
-('Nordic API Integration',      3, 5, 'Completed',   '2025-10-01', '2026-01-31',  45000.00, 43500.00),
-('Brightpath Onboarding',       4, 3, 'Completed',   '2025-11-15', '2026-02-28',  30000.00, 29800.00),
-('Horizon Retail Full Deploy',  6, 1, 'Active',      '2026-03-01', '2026-09-30', 200000.00, 62000.00),
-('Dune Analytics POC',          5, 9, 'On Hold',     '2026-04-01', '2026-07-01',  20000.00,  4500.00),
-('CloudPeak SaaS Setup',        8, 5, 'Scoping',     '2026-05-01', '2026-08-31',  75000.00,     0.00);
+INSERT INTO Projects (Name, ClientID, OwnerID, Status, StartDate, EndDate, CompletedDate, Budget, ActualCost) VALUES
+('Apex Platform Migration',     1, 1, 'Active',      '2026-01-10', '2026-06-30', NULL, 120000.00, 54000.00),
+('Vertix Analytics Rollout',    2, 3, 'Active',      '2026-02-01', '2026-05-31', NULL,  60000.00, 28000.00),
+('Nordic API Integration',      3, 5, 'Completed',   '2025-10-01', '2026-01-31', '2026-01-28',  45000.00, 43500.00),
+('Brightpath Onboarding',       4, 3, 'Completed',   '2025-11-15', '2026-02-28', '2026-03-05',  30000.00, 29800.00),
+('Horizon Retail Full Deploy',  6, 1, 'Active',      '2026-03-01', '2026-09-30', NULL, 200000.00, 62000.00),
+('Dune Analytics POC',          5, 9, 'On Hold',     '2026-04-01', '2026-07-01', NULL,  20000.00,  4500.00),
+('CloudPeak SaaS Setup',        8, 5, 'Scoping',     '2026-05-01', '2026-08-31', NULL,  75000.00,     0.00);
 
 INSERT INTO Orders (ClientID, OrderDate, Status, TotalAmount) VALUES
 (1, '2026-01-05', 'Delivered',   11797.00),
@@ -178,3 +182,11 @@ INSERT INTO SupportTickets (ClientID, AssignedTo, Subject, Priority, Status, Cre
 (5, 8, 'Cannot connect DataSync to source DB',  'High',   'Open',         '2026-05-10', NULL);
 GO
 
+
+-- Derive order header totals from detail rows to avoid mismatches in sample data.
+UPDATE o SET TotalAmount = v.LineTotal
+FROM dbo.Orders AS o
+JOIN (SELECT OrderID, SUM(Quantity * UnitPrice) AS LineTotal
+      FROM dbo.OrderItems GROUP BY OrderID) AS v
+  ON v.OrderID = o.OrderID;
+GO
