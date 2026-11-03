@@ -1,66 +1,84 @@
-﻿# OmniTech Business Analysis — Findings Report
+# Corporate Operations Demo: Reproducible Findings (November 2026 revision)
 
 **Analyst:** Mahmadarsh Vahora  
-**Date:** May 2026  
-**Scope:** Annual planning support analysis — revenue, client, seasonality, and operations
+**Nature:** Self-directed SQL/data-analysis portfolio using **fictional** company, people, clients, transactions and results  
+**Evidence:** [eight-table T-SQL schema and seed data](../schema/enterprise_operations_db.sql), [analysis query library](analyst_queries.sql), [case study queries](case_study_analysis.sql)
 
----
+> These results were recomputed arithmetically from the checked-in SQL `INSERT` rows. They are **not** results of an actual deployed SQL Server instance, audited financial records or current business operations. Any live SQL execution and Power BI visualization must be verified separately.
 
-## Executive Summary
+## Verified dataset scope
 
-This analysis addresses four business questions raised by OmniTech leadership ahead of annual planning. Using the OmniTech relational database (7 tables, transactional through Q1 2026), findings show: (1) revenue is concentrated in one to two product categories; (2) higher client tiers correlate with greater order frequency, validating the tier strategy; (3) order volume follows a predictable seasonal pattern with identifiable peak months; and (4) project delivery rates vary meaningfully by department, identifying both high performers and departments needing operational support.
+| Measure | In the checked-in sample |
+| --- | ---: |
+| Relational tables | 8 |
+| Departments | 5 |
+| Employees | 10 |
+| Clients | 8 |
+| Products | 8 |
+| Projects | 7 |
+| Orders | 9 |
+| Order line items | 31 |
+| Support tickets | 8 |
+| Order dates | January–May 2026 |
+| Delivered / Processing / Pending orders | 5 / 2 / 2 |
 
----
+The schema now refuses to destroy an existing database and includes a final update that reconciles order header totals with the sum of item rows. Four original sample order headers differ from their item totals before reconciliation. Values below use **line items** as the source of truth.
 
-## Methodology
+## Finding 1: Order values by product category
 
-Queries were written in T-SQL against the OmniTech schema. All revenue figures exclude cancelled orders. Delivery rate is defined as completed projects divided by all closed projects (completed plus cancelled) to avoid counting active or on-hold projects as failures. Seasonal analysis uses a seasonality index — the ratio of a given month's order count to the annual monthly average — to normalize across years with different overall volumes. Tier frequency analysis uses average orders per client, not total orders, to control for tier size differences.
+The numbers below are synthetic order-line amounts, **not audited or recognized revenue**. The 'Delivered' column covers only orders marked `Delivered` in the seed data.
 
----
+| Category | All order line amounts | Delivered order amounts |
+| --- | ---: | ---: |
+| Software | $35,990.00 | $22,994.00 |
+| Service | $24,900.00 | $20,600.00 |
+| Add-on | $6,788.00 | $3,993.00 |
+| **Total** | **$67,678.00** | **$47,587.00** |
 
-## Key Findings
+**Supported observation:** Software is the largest category in both groupings. We cannot conclude it has the highest margin because the schema contains no cost-of-goods measurements.
 
-### Finding 1: Revenue Concentration in High-Margin Categories
+## Finding 2: Client tiers and order activity
 
-Product revenue is concentrated: the top one or two categories account for a disproportionate share of total revenue (Pareto concentration expected). Categories with higher average unit prices contribute more revenue per order even when unit volume is lower. This has direct implications for inventory prioritization — stocking out of a high-value category has outsized revenue impact relative to a high-volume, low-price category.
+The nine example orders are associated with client tiers as follows:
 
-**Business implication:** Marketing and procurement should weight their attention toward the top revenue-generating categories. A 10% volume increase in the top category will outperform a 10% increase in the bottom category in absolute revenue terms.
+| Tier | Order count |
+| --- | ---: |
+| Enterprise | 3 |
+| Gold | 3 |
+| Silver | 2 |
+| Bronze | 1 |
 
-### Finding 2: Higher Tiers Order More Frequently
+This **does not prove** that changing a client to a higher tier causes additional purchases. The demonstration has too few clients and orders for that conclusion. A proper study would compare order frequency per client over comparable observation periods.
 
-Enterprise and Gold tier clients place orders at a higher average frequency than Bronze or Silver clients. This validates the tier classification as a meaningful behavioral segmentation — tiers are not just labels but predictive of purchase cadence. Enterprise clients in particular show the highest average orders per client, justifying the resource investment of dedicated account management.
+## Finding 3: Monthly order sample is not sufficient for seasonality
 
-**Business implication:** The tier upgrade path (Bronze to Silver to Gold to Enterprise) should be actively managed. Moving a Silver client to Gold is likely to increase their order frequency, not just their discount level.
+| Month in 2026 | Order count |
+| --- | ---: |
+| January | 2 |
+| February | 2 |
+| March | 2 |
+| April | 2 |
+| May | 1 |
 
-### Finding 3: Q4 Seasonal Peak Consistent Across Years
+There are **no Q4 records**. Therefore, the previous report's claim of a consistent October–December peak was unsupported and has been withdrawn. Seasonal effects require several years of comparable data and an explicit method for incomplete observation periods.
 
-Order volume shows a consistent seasonal pattern: elevated volume in Q4 (October through December) and a relative trough in Q2 (April through June). The seasonality index for peak months exceeds 120 (20%+ above the monthly average), while trough months fall below 85. This pattern is stable across available years, suggesting structural demand seasonality rather than random variation.
+## Finding 4: Project delivery metrics
 
-**Business implication:** Operations and fulfillment capacity should be scaled ahead of the Q4 peak. Conversely, Q2 represents a lower-risk window for system maintenance, employee training, or infrastructure projects.
+Two projects are labeled `Completed`; both now include an actual `CompletedDate` distinct from the planned `EndDate`:
 
-### Finding 4: Department Delivery Rate Variance Is Material
+- **Nordic API Integration:** January 28, 2026 actual vs. January 31 planned, on time.
+- **Brightpath Onboarding:** March 5, 2026 actual vs. February 28 planned, late.
 
-Project delivery rates (completed vs. closed) vary significantly across departments. Top-performing departments achieve delivery rates above 80%, while underperforming departments fall below 60%. Average completion time for completed projects also varies, suggesting not just success/failure differences but also efficiency differences.
+Only **one of the two** completed projects is on time in this sample. A two-project denominator is not sufficient to rank teams or generalize business performance.
 
-**Business implication:** Delivery best practices from high-performing departments should be documented and shared. Departments below 70% delivery rate warrant a root-cause review — are projects being cancelled due to scope issues, resourcing, or client factors?
+## Practical analysis recommendations
 
----
+1. Execute the T-SQL schema in a **fresh, disposable SQL Server database** and verify the statements, constraints, row counts and analytical queries before treating SQL runtime validation as complete.
+2. Add durable test fixtures that reconcile order headers to details and reject inconsistent input data earlier in the ingestion process.
+3. Introduce cost, discount, refund and tax columns before using words such as *revenue*, *profit*, or *margin* in external reporting.
+4. Add more months and years of representative example transactions before conducting trend or seasonality analyses.
+5. Add clearly documented report exports or Power BI files if claiming a finished, interactive Power BI dashboard.
 
-## Business Recommendations
+## Historical report correction
 
-1. **Protect top-category stock levels** — implement inventory alerts for the top two revenue categories at a lower threshold than other products to reduce stockout risk.
-
-2. **Operationalize tier upgrades** — build a quarterly review process for Silver clients who have placed orders above a frequency threshold, and offer targeted engagement to move them to Gold tier.
-
-3. **Align capacity planning to seasonal index** — use the Q4 seasonality spike to pre-authorize overtime or temporary fulfillment resources starting in September, and schedule system maintenance for May or June.
-
-4. **Launch a delivery rate improvement program** — pair the lowest-performing department with the highest-performing department for a 90-day knowledge transfer initiative; measure delivery rate improvement at the 6-month mark.
-
----
-
-## Limitations
-
-- **Schema is a portfolio model:** The OmniTech database was designed for analytical demonstration. Findings are directionally valid but based on simulated data.
-- **No cost data:** Margin analysis is approximated using list price as a cost proxy. True margin analysis requires a separate cost-of-goods table not present in this schema.
-- **Churn definition is behavioral:** The churn metric uses purchase recency, not a formal churn event.
-- **Project delivery rate assumes EndDate accuracy:** If EndDate is updated when a project completes, the on-time calculation may be circular.
+The prior version of this document described **seven tables**, a Q4 demand spike, category margins and department performance differences that could not be reproduced from the committed seed data. This revision replaces those claims with limited, checkable observations. The Git history retains the original for review.
