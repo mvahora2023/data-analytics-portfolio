@@ -1,3 +1,4 @@
+-- Portfolio sample only: synthetic data; order values are not accounting revenue.
 -- ============================================================
 -- CorpDB Analytics Case Study
 -- Author: Mahmadarsh Vahora
@@ -24,8 +25,8 @@ WITH CategoryMetrics AS (
     SELECT
         p.Category,
         COUNT(DISTINCT o.OrderID)                                   AS OrderCount,
-        SUM(oi.Qty)                                                 AS UnitsSold,
-        SUM(oi.Qty * oi.UnitPrice)                                  AS TotalRevenue,
+        SUM(oi.Quantity)                                                 AS UnitsSold,
+        SUM(oi.Quantity * oi.UnitPrice)                                  AS TotalRevenue,
         AVG(oi.UnitPrice)                                           AS AvgUnitPrice
     FROM Products    p
     JOIN OrderItems  oi ON oi.ProductID = p.ProductID
@@ -98,7 +99,7 @@ WITH MonthlyOrders AS (
         MONTH(o.OrderDate)                                          AS OrderMonth,
         DATENAME(MONTH, o.OrderDate)                                AS MonthName,
         COUNT(DISTINCT o.OrderID)                                   AS OrderCount,
-        SUM(oi.Qty * oi.UnitPrice)                                  AS MonthRevenue
+        SUM(oi.Quantity * oi.UnitPrice)                                  AS MonthRevenue
     FROM Orders     o
     JOIN OrderItems oi ON oi.OrderID = o.OrderID
     WHERE o.Status NOT IN ('Cancelled')
@@ -146,9 +147,9 @@ ORDER BY OrderYear, OrderMonth;
 -- ============================================================
 WITH DeptProjectStats AS (
     SELECT
-        d.DeptID,
-        d.DeptName,
-        COUNT(proj.ProjID)                                          AS TotalProjects,
+        d.DepartmentID,
+        d.Name,
+        COUNT(proj.ProjectID)                                          AS TotalProjects,
         SUM(CASE WHEN proj.Status = 'Completed'  THEN 1 ELSE 0 END) AS Completed,
         SUM(CASE WHEN proj.Status = 'Active'     THEN 1 ELSE 0 END) AS Active,
         SUM(CASE WHEN proj.Status = 'On Hold'    THEN 1 ELSE 0 END) AS OnHold,
@@ -157,13 +158,13 @@ WITH DeptProjectStats AS (
         AVG(
             CASE
                 WHEN proj.Status = 'Completed'
-                THEN DATEDIFF(DAY, proj.StartDate, proj.EndDate)
+                THEN DATEDIFF(DAY, proj.StartDate, proj.CompletedDate)
             END
         )                                                           AS AvgCompletedDays
     FROM Departments d
-    JOIN Employees   e    ON e.DeptID   = d.DeptID
-    JOIN Projects    proj ON proj.EmpID = e.EmpID
-    GROUP BY d.DeptID, d.DeptName
+    JOIN Employees   e    ON e.DepartmentID   = d.DepartmentID
+    JOIN Projects    proj ON proj.OwnerID = e.EmployeeID
+    GROUP BY d.DepartmentID, d.Name
 )
 SELECT
     DeptName,
