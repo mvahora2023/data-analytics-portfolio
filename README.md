@@ -13,7 +13,7 @@ SQL schema design, T-SQL query library, Power BI DAX measures, and business inte
 ## Projects
 
 ### Corporate Operations Database
-A 9-table normalized SQL Server schema modeling a fictional enterprise: Departments, Employees, Clients (tier-classified), Products, Projects, Orders, and Order Items. Designed with `CHECK` constraints for data quality enforcement, `IDENTITY` primary keys, explicit `FOREIGN KEY` references, and `DECIMAL(10,2)` for all monetary values.
+A 8-table normalized SQL Server schema modeling a fictional enterprise: Departments, Employees, Clients (tier-classified), Products, Projects, Orders, and Order Items. Designed with `CHECK` constraints for data quality enforcement, `IDENTITY` primary keys, explicit `FOREIGN KEY` references, and `DECIMAL(10,2)` for all monetary values.
 
 ### SafeOps Security Operations Database
 A SQL schema for security operations data: service management events, audit log entries, and operational metrics. Demonstrates applying relational database design to security tooling — transforming flat log output into a queryable, reportable dataset.
@@ -25,7 +25,7 @@ A SQL schema for security operations data: service management events, audit log 
 ```
 data-analytics-portfolio/
 ├── schema/
-│   ├── enterprise_operations_db.sql  — Full 9-table DDL with constraints and relationships
+│   ├── enterprise_operations_db.sql  — Full 8-table DDL with constraints and relationships
 │   ├── safeops_toolkit_db.sql        — Security operations schema
 │   └── SafeOps_Toolkit.sql           — SafeOps schema variant
 ├── queries/
