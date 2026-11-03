@@ -2,7 +2,7 @@
 -- ============================================================
 -- CorpDB Analyst Query Library
 -- Author: Mahmadarsh Vahora
--- Schema: CorpDB (9-table relational model)
+-- Schema: CorpDB (8-table relational model)
 -- Purpose: Business intelligence queries for operational reporting
 -- ============================================================
 
