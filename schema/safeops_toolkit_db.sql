@@ -95,14 +95,14 @@ INSERT INTO Departments (Name, Location) VALUES
 ('Maintenance',      'Building D - Ground Floor');
 
 INSERT INTO Employees (FirstName, LastName, Email, DepartmentID, Role, HireDate) VALUES
-('James',   'Carter',   'j.carter@safeops.com',   1, 'Operations Manager',    '2019-03-15'),
-('Sara',    'Mitchell', 's.mitchell@safeops.com',  2, 'Field Safety Officer',  '2020-06-01'),
-('Raj',     'Patel',    'r.patel@safeops.com',     3, 'IT Security Analyst',   '2021-01-10'),
-('Linda',   'Nguyen',   'l.nguyen@safeops.com',    4, 'Compliance Lead',       '2018-09-22'),
-('Tom',     'Brooks',   't.brooks@safeops.com',    5, 'Maintenance Tech',      '2022-04-05'),
-('Aisha',   'Khan',     'a.khan@safeops.com',      2, 'Safety Inspector',      '2021-11-18'),
-('Derek',   'Walsh',    'd.walsh@safeops.com',     1, 'Operations Analyst',    '2023-02-28'),
-('Priya',   'Sharma',   'p.sharma@safeops.com',    3, 'Security Engineer',     '2020-07-14');
+('James',   'Carter',   'j.carter@safeops.example',   1, 'Operations Manager',    '2019-03-15'),
+('Sara',    'Mitchell', 's.mitchell@safeops.example',  2, 'Field Safety Officer',  '2020-06-01'),
+('Raj',     'Patel',    'r.patel@safeops.example',     3, 'IT Security Analyst',   '2021-01-10'),
+('Linda',   'Nguyen',   'l.nguyen@safeops.example',    4, 'Compliance Lead',       '2018-09-22'),
+('Tom',     'Brooks',   't.brooks@safeops.example',    5, 'Maintenance Tech',      '2022-04-05'),
+('Aisha',   'Khan',     'a.khan@safeops.example',      2, 'Safety Inspector',      '2021-11-18'),
+('Derek',   'Walsh',    'd.walsh@safeops.example',     1, 'Operations Analyst',    '2023-02-28'),
+('Priya',   'Sharma',   'p.sharma@safeops.example',    3, 'Security Engineer',     '2020-07-14');
 
 INSERT INTO IncidentTypes (TypeName, Severity) VALUES
 ('Slip and Fall',           'Medium'),
