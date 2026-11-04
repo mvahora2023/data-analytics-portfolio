@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "project": "data-analytics-portfolio",
+  "synthetic": {
+    "source": "Fictional SQL Server seed data",
+    "mode": "default"
+  },
+  "public": [
+    {
+      "id": "nyc",
+      "label": "NYC Open Data 311",
+      "type": "nyc"
+    }
+  ],
+  "localData": {
+    "enabled": false,
+    "fileImport": false,
+    "privateAccounts": false,
+    "deviceAccess": false
+  },
+  "dataPolicy": "No mixing of reference records into fictional KPI counts; source and retrieval date displayed; public fetch only on explicit click."
+}
