@@ -87,14 +87,14 @@ CREATE TABLE Vulnerabilities (
 GO
 
 INSERT INTO Users (Username, FullName, Email, Department, Role, AccessLevel, AccountStatus, LastLogin) VALUES
-    ('arsh.m',   'Arsh Makkar',   'arsh@omnitech.io',     'Security',   'Analyst',  'High',     'Active',    '2026-05-22 08:30:00'),
-    ('j.carter', 'James Carter',  'j.carter@omnitech.io', 'IT',         'Admin',    'Critical', 'Active',    '2026-05-23 09:00:00'),
-    ('s.patel',  'Simran Patel',  's.patel@omnitech.io',  'Security',   'Engineer', 'High',     'Active',    '2026-05-21 14:00:00'),
-    ('t.nguyen', 'Tommy Nguyen',  't.nguyen@omnitech.io', 'HR',         'User',     'Low',      'Active',    '2026-05-20 11:00:00'),
-    ('r.jones',  'Rachel Jones',  'r.jones@omnitech.io',  'Finance',    'User',     'Medium',   'Active',    '2026-05-19 10:00:00'),
-    ('d.kim',    'Daniel Kim',    'd.kim@omnitech.io',    'IT',         'Engineer', 'High',     'Suspended', '2026-05-10 16:00:00'),
-    ('l.torres', 'Luis Torres',   'l.torres@omnitech.io', 'Operations', 'Manager',  'Medium',   'Active',    '2026-05-22 07:45:00'),
-    ('a.white',  'Amy White',     'a.white@omnitech.io',  'Security',   'Analyst',  'High',     'Active',    '2026-05-23 08:00:00');
+    ('arsh.m',   'Arsh Makkar',   'arsh@omnitech.example',     'Security',   'Analyst',  'High',     'Active',    '2026-05-22 08:30:00'),
+    ('j.carter', 'James Carter',  'j.carter@omnitech.example', 'IT',         'Admin',    'Critical', 'Active',    '2026-05-23 09:00:00'),
+    ('s.patel',  'Simran Patel',  's.patel@omnitech.example',  'Security',   'Engineer', 'High',     'Active',    '2026-05-21 14:00:00'),
+    ('t.nguyen', 'Tommy Nguyen',  't.nguyen@omnitech.example', 'HR',         'User',     'Low',      'Active',    '2026-05-20 11:00:00'),
+    ('r.jones',  'Rachel Jones',  'r.jones@omnitech.example',  'Finance',    'User',     'Medium',   'Active',    '2026-05-19 10:00:00'),
+    ('d.kim',    'Daniel Kim',    'd.kim@omnitech.example',    'IT',         'Engineer', 'High',     'Suspended', '2026-05-10 16:00:00'),
+    ('l.torres', 'Luis Torres',   'l.torres@omnitech.example', 'Operations', 'Manager',  'Medium',   'Active',    '2026-05-22 07:45:00'),
+    ('a.white',  'Amy White',     'a.white@omnitech.example',  'Security',   'Analyst',  'High',     'Active',    '2026-05-23 08:00:00');
 GO
 
 INSERT INTO Assets (AssetName, AssetType, IPAddress, OperatingSystem, Department, Criticality, Status, Owner, LastScanned) VALUES
