@@ -109,26 +109,26 @@ INSERT INTO Departments (Name, Budget) VALUES
 ('IT Operations',       380000.00);
 
 INSERT INTO Employees (FirstName, LastName, Email, DepartmentID, Title, Salary, HireDate) VALUES
-('Marcus',  'Reid',     'm.reid@omnitech.io',     1, 'VP of Engineering',        145000.00, '2017-05-10'),
-('Chloe',   'Evans',    'c.evans@omnitech.io',    2, 'Sales Director',           130000.00, '2018-08-15'),
-('Noah',    'Torres',   'n.torres@omnitech.io',   3, 'Product Manager',          115000.00, '2019-03-01'),
-('Fatima',  'Ali',      'f.ali@omnitech.io',      4, 'Customer Success Manager', 105000.00, '2020-01-20'),
-('Liam',    'Chen',     'l.chen@omnitech.io',     1, 'Senior Engineer',          125000.00, '2019-07-22'),
-('Grace',   'Park',     'g.park@omnitech.io',     5, 'IT Ops Lead',              110000.00, '2020-11-03'),
-('Oscar',   'Brown',    'o.brown@omnitech.io',    2, 'Account Executive',         90000.00, '2021-06-14'),
-('Nia',     'James',    'n.james@omnitech.io',    4, 'Support Specialist',        80000.00, '2022-02-28'),
-('Ethan',   'Liu',      'e.liu@omnitech.io',      1, 'Backend Engineer',         118000.00, '2021-09-06'),
-('Sofia',   'Martins',  's.martins@omnitech.io',  3, 'UX Designer',               95000.00, '2022-07-11');
+('Marcus',  'Reid',     'm.reid@omnitech.example',     1, 'VP of Engineering',        145000.00, '2017-05-10'),
+('Chloe',   'Evans',    'c.evans@omnitech.example',    2, 'Sales Director',           130000.00, '2018-08-15'),
+('Noah',    'Torres',   'n.torres@omnitech.example',   3, 'Product Manager',          115000.00, '2019-03-01'),
+('Fatima',  'Ali',      'f.ali@omnitech.example',      4, 'Customer Success Manager', 105000.00, '2020-01-20'),
+('Liam',    'Chen',     'l.chen@omnitech.example',     1, 'Senior Engineer',          125000.00, '2019-07-22'),
+('Grace',   'Park',     'g.park@omnitech.example',     5, 'IT Ops Lead',              110000.00, '2020-11-03'),
+('Oscar',   'Brown',    'o.brown@omnitech.example',    2, 'Account Executive',         90000.00, '2021-06-14'),
+('Nia',     'James',    'n.james@omnitech.example',    4, 'Support Specialist',        80000.00, '2022-02-28'),
+('Ethan',   'Liu',      'e.liu@omnitech.example',      1, 'Backend Engineer',         118000.00, '2021-09-06'),
+('Sofia',   'Martins',  's.martins@omnitech.example',  3, 'UX Designer',               95000.00, '2022-07-11');
 
 INSERT INTO Clients (CompanyName, ContactName, Email, Phone, Country, Tier) VALUES
-('Apex Logistics',      'Daniel Fry',       'd.fry@apexlogistics.com',      '+1-555-0101', 'USA',          'Enterprise'),
-('Vertix Solutions',    'Hannah Cole',      'h.cole@vertix.io',             '+1-555-0202', 'USA',          'Gold'),
-('Nordic Systems',      'Erik Svensson',    'e.svensson@nordicsys.se',      '+46-70-123456','Sweden',      'Silver'),
-('Brightpath Inc.',     'Tara Singh',       't.singh@brightpath.ca',        '+1-416-555-9900','Canada',    'Gold'),
-('Dune Analytics',      'Carlos Reyes',     'c.reyes@duneanalytics.mx',     '+52-55-5551234','Mexico',     'Bronze'),
-('Horizon Retail',      'Jenny Wu',         'j.wu@horizonretail.com',       '+1-555-0303', 'USA',          'Enterprise'),
-('Kapstone Media',      'Benji Okafor',     'b.okafor@kapstone.ng',         '+234-801-000111','Nigeria',   'Silver'),
-('CloudPeak Tech',      'Iris Yamamoto',    'i.yamamoto@cloudpeak.jp',      '+81-3-5555-0808','Japan',     'Gold');
+('Apex Logistics',      'Daniel Fry',       'd.fry@apexlogistics.example',      '+1-555-0101', 'USA',          'Enterprise'),
+('Vertix Solutions',    'Hannah Cole',      'h.cole@vertix.example',             '+1-555-0202', 'USA',          'Gold'),
+('Nordic Systems',      'Erik Svensson',    'e.svensson@nordicsys.example',      '+46-70-123456','Sweden',      'Silver'),
+('Brightpath Inc.',     'Tara Singh',       't.singh@brightpath.example',        '+1-416-555-9900','Canada',    'Gold'),
+('Dune Analytics',      'Carlos Reyes',     'c.reyes@duneanalytics.example',     '+52-55-5551234','Mexico',     'Bronze'),
+('Horizon Retail',      'Jenny Wu',         'j.wu@horizonretail.example',       '+1-555-0303', 'USA',          'Enterprise'),
+('Kapstone Media',      'Benji Okafor',     'b.okafor@kapstone.example',         '+234-801-000111','Nigeria',   'Silver'),
+('CloudPeak Tech',      'Iris Yamamoto',    'i.yamamoto@cloudpeak.example',      '+81-3-5555-0808','Japan',     'Gold');
 
 INSERT INTO Products (Name, Category, Description, UnitPrice, StockQty) VALUES
 ('OmniCore Platform',       'Software',     'Core enterprise SaaS platform',                4999.00,  999),
